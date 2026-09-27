@@ -1,10 +1,10 @@
 app-id: io.scottlabs.reManager
 runtime: org.gnome.Platform
-runtime-version: '49'
+runtime-version: '51'
 sdk: org.gnome.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.golang
-  - org.freedesktop.Sdk.Extension.node20
+  - org.freedesktop.Sdk.Extension.node24
 command: reManager
 
 finish-args:
@@ -17,7 +17,7 @@ finish-args:
   - --filesystem=~/.ssh:ro
 
 build-options:
-  append-path: /usr/lib/sdk/golang/bin:/usr/lib/sdk/node20/bin
+  append-path: /usr/lib/sdk/golang/bin:/usr/lib/sdk/node24/bin
   env:
     GOROOT: /usr/lib/sdk/golang
     XDG_CACHE_HOME: /run/build/reManager/flatpak-node/cache

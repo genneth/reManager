@@ -1,4 +1,4 @@
-.PHONY: dev build build-all build-windows-amd64 build-windows-arm64 clean flatpak flatpak-deps flatpak-install flatpak-docker-arm64 flatpak-docker-gnome49 flatpak-clean
+.PHONY: dev build build-all build-windows-amd64 build-windows-arm64 clean flatpak flatpak-deps flatpak-install flatpak-docker-arm64 flatpak-docker-gnome51 flatpak-clean
 
 VERSION := $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
 LDFLAGS := -ldflags "-X main.version=$(VERSION)"
@@ -68,15 +68,13 @@ flatpak-docker-arm64:
 		flatpak-builder --repo=repo --install-deps-from=flathub --force-clean build-dir flatpak/io.scottlabs.reManager.yml && \
 		flatpak build-bundle repo reManager.flatpak io.scottlabs.reManager"
 
-# Build flatpak for GNOME 49 via Docker (Fedora 42 has GNOME 49)
-flatpak-docker-gnome49:
+# Build flatpak for GNOME 51 via Docker using the CI image
+flatpak-docker-gnome51:
 	docker run --rm --privileged \
-		-v "$(PWD)":/build -w /build fedora:42 bash -c \
-		"dnf install -y flatpak flatpak-builder && \
-		flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo && \
-		flatpak-builder --repo=repo --install-deps-from=flathub --force-clean build-dir flatpak/io.scottlabs.reManager.yml && \
-		flatpak build-bundle repo reManager-gnome49.flatpak io.scottlabs.reManager"
+		-v "$(PWD)":/build -w /build ghcr.io/flathub-infra/flatpak-github-actions:gnome-51 bash -c \
+		"flatpak-builder --repo=repo --install-deps-from=flathub --force-clean build-dir flatpak/io.scottlabs.reManager.yml && \
+		flatpak build-bundle repo reManager-gnome51.flatpak io.scottlabs.reManager"
 
 # Clean flatpak build artifacts
 flatpak-clean:
-	rm -rf build-dir .flatpak-builder repo reManager.flatpak reManager-gnome49.flatpak
+	rm -rf build-dir .flatpak-builder repo reManager.flatpak reManager-gnome51.flatpak
